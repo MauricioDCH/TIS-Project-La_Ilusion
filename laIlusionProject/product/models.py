@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.timezone import now
@@ -25,6 +26,9 @@ class ProductoBase(models.Model):
     # Relación con Categoría y Subcategoría
     categoria = models.ForeignKey('Categoria', on_delete=models.CASCADE, related_name='productos', verbose_name="Categoría", null=False, blank=False)
     subcategoria = models.ForeignKey('Subcategoria', on_delete=models.CASCADE, related_name='productos', verbose_name="Subcategoría", null=False, blank=False)
+    
+    # Campo para el usuario que registró el producto
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='productos', verbose_name="Usuario", null=True, blank=False)
     
     # Campos base obligatorios
     id_producto = models.AutoField(primary_key=True, verbose_name="ID del producto", null=False, blank=False)
@@ -141,22 +145,22 @@ class Producto(ProductoBase):
         if self.imagenes.count() == 0:
             raise ValidationError("Debe subir al menos una imagen para el producto.")
 
-
 # Modelo de Imagen
 class Imagen(models.Model):
     id_imagen = models.AutoField(primary_key=True, verbose_name="ID de la imagen")
-    url = models.URLField(max_length=200, verbose_name="URL de la imagen", null=False, blank=False)
+    url = models.ImageField(upload_to='imagenes_de_productos/', verbose_name="Imagen", null=False, blank=False)
     descripcion = models.CharField(max_length=255, blank=True, verbose_name="Descripción")
 
     def __str__(self):
-        return self.url
-
+        return self.descripcion or self.url.name
 
 # Modelo de Comentario
 class Comentario(models.Model):
     id_comentario = models.AutoField(primary_key=True, verbose_name="ID del comentario")
     texto = models.TextField(verbose_name="Comentario", null=False, blank=False)
     fecha_comentario = models.DateTimeField(auto_now_add=True, verbose_name="Fecha del comentario", null=False, blank=False)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comentarios', verbose_name="Usuario", null=True, blank=False)
+
 
     def __str__(self):
         return f"Comentario {self.id_comentario} - {self.fecha_comentario}"
