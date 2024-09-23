@@ -1,5 +1,0 @@
-{% if user.is_authenticated %}
-    <a href="{% url 'logout' %}">Cerrar Sesión</a>
-{% else %}
-    <a href="{% url 'login' %}">Iniciar Sesión</a>
-{% endif %}
