@@ -1,0 +1,31 @@
+.bg-secondary {
+    background-color: #bc761a !important;
+}
+
+.copyright {
+    background-color: #1a252f;
+    height: 7%;
+}
+
+
+nav{
+    font-weight: 600;
+}
+
+.img-card{
+    height: 18vw;
+    object-fit: cover;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;  /* Esto hará que el contenedor principal ocupe el espacio restante */
+}
