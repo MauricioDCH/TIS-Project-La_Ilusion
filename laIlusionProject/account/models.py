@@ -22,9 +22,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=100)
     adminAccount = models.BooleanField(default=False)
-    address = models.CharField(max_length=255)
-    city = models.CharField(max_length=100)
-    creditCard = models.CharField(max_length=16)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
@@ -41,3 +38,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     def has_module_perms(self, app_label):
         return self.is_staff
+    
+    def save(self, *args, **kwargs):
+        # Si la cuenta está siendo creada por un usuario normal, aseguramos que no puedan ser administradores
+        if not self.is_staff:
+            self.adminAccount = False
+        super().save(*args, **kwargs)

@@ -1,24 +1,52 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuario</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %} Registro {% endblock %}
+{% block content %}
     <h2>Registro de Usuario</h2>
-    <form method="POST">
+    <form method="POST" class="form-container">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Registrarse</button>
+        
+        <div class="form-group">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="text-danger">
+                    {{ form.email.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            {{ form.password1.label_tag }}
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <div class="text-danger">
+                    {{ form.password1.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            {{ form.password2.label_tag }}
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <div class="text-danger">
+                    {{ form.password2.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-3">Registrarse</button>
     </form>
 
     {% if messages %}
-        <ul>
+        <ul class="mt-2">
             {% for message in messages %}
-                <li>{{ message }}</li>
+                <li class="alert alert-info">{{ message }}</li>
             {% endfor %}
         </ul>
     {% endif %}
-</body>
-</html>
+
+    <p>
+        <a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a>
+    </p>
+{% endblock %}
