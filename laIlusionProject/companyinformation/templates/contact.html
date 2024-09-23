@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<h1>{{Subtitle}}</h1>
+<div class="container">
+    <h2>{{Telefono_fijo}}</h2>
+    <p class="lead">{{Contenido_telefono_fijo}}</p>
+</div>
+<div class="container">
+    <h2>{{Telefono_celular}}</h2>
+    <p class="lead">{{Contenido_telefono_celular}}</p>
+</div>
+<div class="container">
+    <h2>{{Correo_electronico}}</h2>
+    <p class="lead">{{Contenido_correo_electronico}}</p>
+</div>
+<div class="container">
+    <h2>{{Direccion}}</h2>
+    <p class="lead">{{Contenido_direccion_1}}</br>{{Contenido_direccion_2}}</br>{{Contenido_direccion_3}}</p>
+</div>
+{% endblock %}
