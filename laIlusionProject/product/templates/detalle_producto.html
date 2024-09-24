@@ -56,6 +56,10 @@
                     {% load humanize %}
                     <h3 class="text" style="color: green;">${{ producto.precio|intcomma }}</h3>
                     <h6 class="text">{{ producto.descripcion }}</h6>
+                    <form method="POST" action="{% url 'agregar_al_carrito' producto.id_producto %}">
+                        {% csrf_token %}
+                        <button type="submit">Agregar al carrito</button>
+                    </form>
                 </div>
             </div>
             
@@ -69,6 +73,7 @@
                                 <strong>{{ campo|capfirst }}:</strong> {{ valor }}
                             </div>
                         {% endfor %}
+                        
                     </div>
                 </div>
             </div>

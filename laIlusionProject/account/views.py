@@ -13,6 +13,7 @@ from django.views.generic.edit import CreateView
 
 from .forms import UserRegisterForm, LoginForm
 from .models import Account
+from shoppingcart.models import Carrito
 
 # Create your views here.
 
@@ -26,6 +27,7 @@ class RegisterView(CreateView):
         # Siempre aseguramos que el campo 'adminAccount' sea False al crear un nuevo usuario
         form.instance.adminAccount = False
         messages.success(self.request, 'Tu cuenta se ha creado exitosamente.')
+        
         return super().form_valid(form)
 
 class CustomLoginView(LoginView):
