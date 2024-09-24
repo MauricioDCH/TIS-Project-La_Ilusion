@@ -38,7 +38,7 @@ class ProductoBase(models.Model):
     uso = models.TextField(verbose_name="Uso del producto", null=False, blank=False)
     marca = models.CharField(max_length=100, verbose_name="Marca", null=False, blank=False)
     garantia = models.IntegerField(verbose_name="Garantía (meses)", null=False, blank=False)
-    calificaciones = models.DecimalField(max_digits=1, decimal_places=0, verbose_name="Calificación", validators=[MinValueValidator(1), MaxValueValidator(5)], null=False, blank=False)
+    calificaciones = models.DecimalField(max_digits=1, decimal_places=0, verbose_name="Calificación", validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True)
     
     # Fecha de creación, modificación, estado activo y eliminación
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación", null=False, blank=False)
@@ -69,19 +69,31 @@ class ProductoBase(models.Model):
         if self.fecha_eliminacion and self.fecha_eliminacion > now():
             raise ValidationError("La fecha de eliminación no puede ser en el futuro.")
 
-        # Validación de la calificación: Asegurar que esté entre 1 y 5 (aunque ya tiene validadores)
-        if not (1 <= self.calificaciones <= 5):
-            raise ValidationError("La calificación debe estar entre 1 y 5.")
-
+        # Validación de la calificación: Asegurar que esté entre 1 y 5
+        if self.calificaciones is not None:  # Solo valida si calificaciones no es None
+            if not (1 <= self.calificaciones <= 5):
+                raise ValidationError("La calificación debe estar entre 1 y 5.")
         # Validación del precio: Ya se asegura con el validador, pero podrías incluir otra regla si es necesario
         if self.precio < 0:
             raise ValidationError("El precio no puede ser negativo.")
+
+# Modelo de Imagen
+class Imagen(models.Model):
+    id_imagen = models.AutoField(primary_key=True, verbose_name="ID de la imagen")
+    # Cambia el related_name aquí
+    productos = models.ManyToManyField('Producto', related_name='imagenes_inversas', blank=True)  # Cambiado a 'imagenes_inversas'
+    url = models.ImageField(upload_to='imagenes_de_productos/', verbose_name="Imagen", null=False, blank=False)
+    descripcion = models.CharField(max_length=255, blank=True, verbose_name="Descripción")
+
+    def __str__(self):
+        return self.descripcion if self.descripcion else f"Imagen {self.id_imagen}"
 
 
 # Modelo de Producto que hereda de ProductoBase
 class Producto(ProductoBase):
     # Imágenes es un campo obligatorio con una relación ManyToMany
-    imagenes = models.ManyToManyField('Imagen', blank=False, verbose_name="Imágenes")
+    imagenes = models.ManyToManyField(Imagen, blank=True, verbose_name="Imágenes", related_name='productos_inversos')
+
     # Relacionado con comentarios (puede estar vacío)
     comentarios = models.ManyToManyField('Comentario', blank=True, verbose_name="Comentarios")
     
@@ -91,68 +103,70 @@ class Producto(ProductoBase):
     alto = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, verbose_name="Alto (cm)")
     altura_griferia = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, verbose_name="Altura de la grifería (cm)")
     ancho = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, verbose_name="Ancho (cm)")
-    areas_uso = models.TextField(blank=True, verbose_name="Áreas de uso")
-    calidad = models.CharField(max_length=255, blank=True, verbose_name="Calidad")
+    areas_uso = models.TextField(blank=True, null=True,verbose_name="Áreas de uso")
+    calidad = models.CharField(max_length=255, blank=True, null=True, verbose_name="Calidad")
     capacidad_descarga = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True, verbose_name="Capacidad de descarga (L)")
-    componentes = models.TextField(blank=True, verbose_name="Componentes incluidos")
+    componentes = models.TextField(blank=True, null=True,verbose_name="Componentes incluidos")
     consumo_agua = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True, verbose_name="Consumo de agua (L/min)")
-    contenido_producto = models.TextField(blank=True, verbose_name="Contenido del producto")
+    contenido_producto = models.TextField(blank=True, null=True,verbose_name="Contenido del producto")
     diametro_desague = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True, verbose_name="Diámetro del desagüe (cm)")
-    dimensiones = models.CharField(max_length=255, blank=True, verbose_name="Dimensiones")
-    dilucion = models.CharField(max_length=255, blank=True, verbose_name="Dilución")
+    dimensiones = models.CharField(max_length=255, blank=True, null=True,verbose_name="Dimensiones")
+    dilucion = models.CharField(max_length=255, blank=True, null=True,verbose_name="Dilución")
     espesor = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, verbose_name="Espesor (cm)")
-    forma = models.CharField(max_length=255, blank=True, verbose_name="Forma")
-    formato = models.CharField(max_length=255, blank=True, verbose_name="Formato")
-    garantia = models.TextField(blank=True, verbose_name="Garantía")
-    incluye = models.TextField(blank=True, verbose_name="Incluye")
+    forma = models.CharField(max_length=255, blank=True, null=True,verbose_name="Forma")
+    formato = models.CharField(max_length=255, blank=True, null=True,verbose_name="Formato")
+    garantia = models.TextField(blank=True, null=True,verbose_name="Garantía")
+    incluye = models.TextField(blank=True, null=True,verbose_name="Incluye")
     largo = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, verbose_name="Largo (cm)")
-    lavabilidad = models.CharField(max_length=255, blank=True, verbose_name="Lavabilidad")
+    lavabilidad = models.CharField(max_length=255, blank=True, null=True, verbose_name="Lavabilidad")
     longitud_brazo = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, verbose_name="Longitud del brazo (cm)")
-    materiales = models.TextField(blank=True, verbose_name="Materiales")
+    materiales = models.TextField(blank=True, null=True,verbose_name="Materiales")
     metro_por_caja = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True, verbose_name="Metro por caja")
-    no_incluye = models.TextField(blank=True, verbose_name="No incluye")
-    perfil_tasa = models.CharField(max_length=255, blank=True, verbose_name="Perfil de tasa")
+    no_incluye = models.TextField(blank=True, null=True,verbose_name="No incluye")
+    perfil_tasa = models.CharField(max_length=255, blank=True, null=True,verbose_name="Perfil de tasa")
     piezas_por_caja = models.PositiveIntegerField(blank=True, null=True, verbose_name="Piezas por caja")
-    presentacion = models.CharField(max_length=255, blank=True, verbose_name="Presentación")
-    productos_compatibles = models.TextField(blank=True, verbose_name="Productos compatibles")
+    presentacion = models.CharField(max_length=255, blank=True, null=True,verbose_name="Presentación")
+    productos_compatibles = models.TextField(blank=True, null=True,verbose_name="Productos compatibles")
     profundidad_pozo = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, verbose_name="Profundidad del pozo (cm)")
-    rendimiento = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, verbose_name="Rendimiento")
-    sistema_accionamiento = models.CharField(max_length=255, blank=True, verbose_name="Sistema de accionamiento")
-    sistema_descarga = models.CharField(max_length=255, blank=True, verbose_name="Sistema de descarga")
+    rendimiento = models.TextField(blank=True, null=True, verbose_name="Rendimiento")
+    sistema_accionamiento = models.CharField(max_length=255, blank=True, null=True,verbose_name="Sistema de accionamiento")
+    sistema_descarga = models.CharField(max_length=255, blank=True, null=True,verbose_name="Sistema de descarga")
     tiempo_abierto = models.DecimalField(max_digits=2, decimal_places=1,blank=True, null=True, verbose_name="Tiempo abierto (min)")
     tiempo_secado = models.DecimalField(max_digits=2, decimal_places=1,blank=True, null=True, verbose_name="Tiempo de secado (min)")
     tiempo_emboquillar = models.DecimalField(max_digits=2, decimal_places=1,blank=True, null=True, verbose_name="Tiempo para emboquillar (min)")
-    tipo_asiento = models.CharField(max_length=255, blank=True, verbose_name="Tipo de asiento")
-    tipo_chorro = models.CharField(max_length=255, blank=True, verbose_name="Tipo de chorro")
-    tipo_cierre = models.CharField(max_length=255, blank=True, verbose_name="Tipo de cierre")
-    tipo_griferia = models.CharField(max_length=255, blank=True, verbose_name="Tipo de grifería")
-    tipo_herrajes = models.CharField(max_length=255, blank=True, verbose_name="Tipo de herrajes")
-    tipo_instalacion = models.CharField(max_length=255, blank=True, verbose_name="Tipo de instalación")
-    tipo_lavamanos = models.CharField(max_length=255, blank=True, verbose_name="Tipo de lavamanos")
-    tipo_manija = models.CharField(max_length=255, blank=True, verbose_name="Tipo de manija")
-    tipo_mezclador = models.CharField(max_length=255, blank=True, verbose_name="Tipo de mezclador")
-    tipo_pintura = models.CharField(max_length=255, blank=True, verbose_name="Tipo de pintura")
-    tipo_regadera = models.CharField(max_length=255, blank=True, verbose_name="Tipo de regadera")
-    tipo_sifon = models.CharField(max_length=255, blank=True, verbose_name="Tipo de sifón")
-    tipo_tanque = models.CharField(max_length=255, blank=True, verbose_name="Tipo de tanque")
-    trafico = models.DecimalField(max_digits=2, decimal_places=0, max_length=255, blank=True, verbose_name="Tráfico")
+    tipo_asiento = models.CharField(max_length=255, blank=True, null=True,verbose_name="Tipo de asiento")
+    tipo_chorro = models.CharField(max_length=255, blank=True, null=True,verbose_name="Tipo de chorro")
+    tipo_cierre = models.CharField(max_length=255, blank=True, null=True,verbose_name="Tipo de cierre")
+    tipo_griferia = models.CharField(max_length=255, blank=True, null=True,verbose_name="Tipo de grifería")
+    tipo_herrajes = models.CharField(max_length=255, blank=True, null=True,verbose_name="Tipo de herrajes")
+    tipo_instalacion = models.CharField(max_length=255, blank=True, null=True, verbose_name="Tipo de instalación")
+    tipo_lavamanos = models.CharField(max_length=255, blank=True, null=True, verbose_name="Tipo de lavamanos")
+    tipo_manija = models.CharField(max_length=255, blank=True, null=True, verbose_name="Tipo de manija")
+    tipo_mezclador = models.CharField(max_length=255, blank=True, null=True, verbose_name="Tipo de mezclador")
+    tipo_pintura = models.CharField(max_length=255, blank=True, null=True, verbose_name="Tipo de pintura")
+    tipo_regadera = models.CharField(max_length=255, blank=True, null=True, verbose_name="Tipo de regadera")
+    tipo_sifon = models.CharField(max_length=255, blank=True, null=True, verbose_name="Tipo de sifón")
+    tipo_tanque = models.CharField(max_length=255, blank=True, null=True, verbose_name="Tipo de tanque")
+    trafico = models.DecimalField(max_digits=2, decimal_places=0, max_length=255, blank=True, null=True, verbose_name="Tráfico")
 
     def __str__(self):
         return self.nombre
 
     # Validación personalizada para asegurar que haya al menos una imagen
+    #def clean(self):
+        #if self.imagenes.count() == 0:
+        #    raise ValidationError("Debe subir al menos una imagen para el producto.")
+        
     def clean(self):
-        if self.imagenes.count() == 0:
-            raise ValidationError("Debe subir al menos una imagen para el producto.")
+        super().clean()
+        # Asegúrate de que los campos no sean None antes de hacer comparaciones
+        # Aquí puedes manejar el caso en que precio o stock sean None
+        if self.precio is None:
+            raise ValidationError("El precio no puede ser vacío.")
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Guarda el objeto primero
 
-# Modelo de Imagen
-class Imagen(models.Model):
-    id_imagen = models.AutoField(primary_key=True, verbose_name="ID de la imagen")
-    url = models.ImageField(upload_to='imagenes_de_productos/', verbose_name="Imagen", null=False, blank=False)
-    descripcion = models.CharField(max_length=255, blank=True, verbose_name="Descripción")
-
-    def __str__(self):
-        return self.descripcion or self.url.name
 
 # Modelo de Comentario
 class Comentario(models.Model):

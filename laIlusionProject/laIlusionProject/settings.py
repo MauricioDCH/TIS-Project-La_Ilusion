@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     "paymentmethod",
     "product",
     "shoppingcart",
+    # Third-party apps
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
