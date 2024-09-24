@@ -38,22 +38,24 @@
                                 </div>
                             {% endif %}
                         </div>
-                        <a class="carousel-control-prev" href="#imagenCarrusel" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <a class="carousel-control-prev" href="#imagenCarrusel" role="button" data-slide="prev" style="color: black;">
+                            <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: black;"></span>
                             <span class="sr-only">Anterior</span>
                         </a>
-                        <a class="carousel-control-next" href="#imagenCarrusel" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <a class="carousel-control-next" href="#imagenCarrusel" role="button" data-slide="next" style="color: black;">
+                            <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: black;"></span>
                             <span class="sr-only">Siguiente</span>
                         </a>
+                        
                     </div>
                 </div>
     
                 <!-- Columna de detalles -->
                 <div class="col-md-6 d-flex flex-column justify-content-center">
-                    <h1 class="text-center">{{ producto.nombre }}</h1>
-                    <h3 class="text-center">${{ producto.precio }}</h3>
-                    <h6 class="text-center">{{ producto.descripcion }}</h6>
+                    <h1 class="text">{{ producto.nombre }}</h1>                    
+                    {% load humanize %}
+                    <h3 class="text" style="color: green;">${{ producto.precio|intcomma }}</h3>
+                    <h6 class="text">{{ producto.descripcion }}</h6>
                 </div>
             </div>
             

@@ -10,6 +10,18 @@ class ProductIndexView(View):
         # Obtener todos los productos
         productos = Producto.objects.all()
 
+        busqueda = request.GET.get('busqueda', '')
+        # Filtrar productos si se proporciona un término de búsqueda
+        if busqueda:
+            productos = productos.filter(nombre__icontains=busqueda)
+        
+        # Verificar si se debe ordenar por categoría
+        ordenar_por_categoria = request.GET.get('ordenar', None)
+
+        if ordenar_por_categoria:
+            # Ordenar productos por categoría
+            productos = productos.order_by('categoria__nombre')
+
         # Crear una lista de productos con la primera imagen
         productos_con_imagen = []
         for producto in productos:
@@ -24,7 +36,10 @@ class ProductIndexView(View):
 
         # Pasar la lista de productos al template
         context = {
+            'title':'Lista de Productos - La Ilusión Pisos y Enchapes',
+            'subtitle':'Lista de Productos',
             'productos_con_imagen': productos_con_imagen,
+            'busqueda': busqueda,
         }
         return render(request, 'lista_productos.html', context)
 
@@ -41,7 +56,7 @@ class DetalleProductoView(View):
         
         # Filtramos campos que no sean IDs ni fechas y que tengan valores no vacíos
         producto_filtrado = {campo: valor for campo, valor in producto_dict.items()
-                             if valor and 'id' not in campo and 'fecha' not in campo}
+                                if valor and 'id' not in campo and 'fecha' not in campo and 'activo' not in campo}
         
         # Crear un nuevo diccionario donde las claves tienen guiones bajos reemplazados por espacios y están capitalizadas
         producto_dict_transformado = {}

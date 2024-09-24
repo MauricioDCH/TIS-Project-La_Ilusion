@@ -1,4 +1,3 @@
-# admin.py
 from django.contrib import admin
 from .models import Categoria, Subcategoria, Producto, Imagen
 
@@ -12,8 +11,8 @@ class ImagenAdmin(admin.ModelAdmin):
     list_display = ('url', 'descripcion')
 
 class ImagenInline(admin.TabularInline):
-    model = Producto.imagenes.through  # Modelo intermedio para ManyToMany
-    extra = 1  # Número de formularios adicionales para agregar imágenes
+    model = Producto.imagenes.through  # Usar el modelo de relación many-to-many
+    extra = 1  # Número de formularios adicionales que se mostrarán para agregar imágenes
 
 class ProductoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'precio', 'categoria', 'subcategoria', 'esta_activo', 'fecha_creacion', 'get_imagenes')
@@ -22,8 +21,8 @@ class ProductoAdmin(admin.ModelAdmin):
     inlines = [ImagenInline]  # Añadir el inline para manejar imágenes
 
     def get_imagenes(self, obj):
-        return ", ".join([img.descripcion for img in obj.imagenes.all()])
-    get_imagenes.short_description = 'Imágenes'
+        return ", ".join([img.descripcion for img in obj.imagenes.all()])  # Obtener descripciones de imágenes
+    get_imagenes.short_description = 'Imágenes'  # Título para la columna
 
     def has_add_permission(self, request):
         return request.user.is_superuser  
