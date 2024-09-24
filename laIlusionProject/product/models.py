@@ -38,7 +38,7 @@ class ProductoBase(models.Model):
     uso = models.TextField(verbose_name="Uso del producto", null=False, blank=False)
     marca = models.CharField(max_length=100, verbose_name="Marca", null=False, blank=False)
     garantia = models.IntegerField(verbose_name="Garantía (meses)", null=False, blank=False)
-    calificaciones = models.DecimalField(max_digits=1, decimal_places=0, verbose_name="Calificación", validators=[MinValueValidator(1), MaxValueValidator(5)], null=False, blank=False)
+    calificaciones = models.DecimalField(max_digits=1, decimal_places=0, verbose_name="Calificación", validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True)
     
     # Fecha de creación, modificación, estado activo y eliminación
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación", null=False, blank=False)
@@ -69,19 +69,31 @@ class ProductoBase(models.Model):
         if self.fecha_eliminacion and self.fecha_eliminacion > now():
             raise ValidationError("La fecha de eliminación no puede ser en el futuro.")
 
-        # Validación de la calificación: Asegurar que esté entre 1 y 5 (aunque ya tiene validadores)
-        if not (1 <= self.calificaciones <= 5):
-            raise ValidationError("La calificación debe estar entre 1 y 5.")
-
+        # Validación de la calificación: Asegurar que esté entre 1 y 5
+        if self.calificaciones is not None:  # Solo valida si calificaciones no es None
+            if not (1 <= self.calificaciones <= 5):
+                raise ValidationError("La calificación debe estar entre 1 y 5.")
         # Validación del precio: Ya se asegura con el validador, pero podrías incluir otra regla si es necesario
         if self.precio < 0:
             raise ValidationError("El precio no puede ser negativo.")
+
+# Modelo de Imagen
+class Imagen(models.Model):
+    id_imagen = models.AutoField(primary_key=True, verbose_name="ID de la imagen")
+    # Cambia el related_name aquí
+    productos = models.ManyToManyField('Producto', related_name='imagenes_inversas', blank=True)  # Cambiado a 'imagenes_inversas'
+    url = models.ImageField(upload_to='imagenes_de_productos/', verbose_name="Imagen", null=False, blank=False)
+    descripcion = models.CharField(max_length=255, blank=True, verbose_name="Descripción")
+
+    def __str__(self):
+        return self.descripcion if self.descripcion else f"Imagen {self.id_imagen}"
 
 
 # Modelo de Producto que hereda de ProductoBase
 class Producto(ProductoBase):
     # Imágenes es un campo obligatorio con una relación ManyToMany
-    imagenes = models.ManyToManyField('Imagen', blank=False, verbose_name="Imágenes")
+    imagenes = models.ManyToManyField(Imagen, blank=True, verbose_name="Imágenes", related_name='productos_inversos')
+
     # Relacionado con comentarios (puede estar vacío)
     comentarios = models.ManyToManyField('Comentario', blank=True, verbose_name="Comentarios")
     
@@ -141,18 +153,20 @@ class Producto(ProductoBase):
         return self.nombre
 
     # Validación personalizada para asegurar que haya al menos una imagen
+    #def clean(self):
+        #if self.imagenes.count() == 0:
+        #    raise ValidationError("Debe subir al menos una imagen para el producto.")
+        
     def clean(self):
-        if self.imagenes.count() == 0:
-            raise ValidationError("Debe subir al menos una imagen para el producto.")
+        super().clean()
+        # Asegúrate de que los campos no sean None antes de hacer comparaciones
+        # Aquí puedes manejar el caso en que precio o stock sean None
+        if self.precio is None:
+            raise ValidationError("El precio no puede ser vacío.")
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Guarda el objeto primero
 
-# Modelo de Imagen
-class Imagen(models.Model):
-    id_imagen = models.AutoField(primary_key=True, verbose_name="ID de la imagen")
-    url = models.ImageField(upload_to='imagenes_de_productos/', verbose_name="Imagen", null=False, blank=False)
-    descripcion = models.CharField(max_length=255, blank=True, verbose_name="Descripción")
-
-    def __str__(self):
-        return self.descripcion or self.url.name
 
 # Modelo de Comentario
 class Comentario(models.Model):

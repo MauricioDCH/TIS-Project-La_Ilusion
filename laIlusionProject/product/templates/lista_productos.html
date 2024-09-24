@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Productos{% endblock %}
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center">Lista de Productos</h1>
+        <div class="row">
+            {% for item in productos_con_imagen %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.producto.nombre }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">${{ item.producto.precio }}</h6>
+                            {% if item.primera_imagen %}
+                                <img src="{{ item.primera_imagen.url.url }}" alt="{{ item.primera_imagen.descripcion }}" class="card-img-top" style="max-height: 200px; object-fit: cover;">
+                            {% else %}
+                                <img src="https://via.placeholder.com/200" alt="No hay imagen" class="card-img-top" style="max-height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <p class="card-text">{{ item.producto.descripcion }}</p>
+                            <a href="{% url 'detalle_producto' item.producto.id_producto %}" class="btn btn-primary">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
