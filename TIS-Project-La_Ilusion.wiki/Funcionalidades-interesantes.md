@@ -1,5 +1,20 @@
 # Funcionalidades interesantes
 
-En esta página describa cuales son las 4 funcionalidades interesantes, y en qué archivos están implementadas (especifique la línea exacta desde donde arranca la implementación).
+Las funcionalidades interesantes que tiene este proyecto son: buscar productos por nombre, ordenar productos por categoría, filtrar por categoría y subcategoría y filtrar por estado del producto.
 
-La aplicación deberá contener por lo menos “4 funcionalidades interesantes” diferentes a las tradicionales: crear, editar, borrar y leer. Ejemplos: (i) búsqueda de productos por nombre, (ii) ver top 3 productos más vendidos, (iii) generar en pdf la factura de venta, (iv) ver top 4 productos más comentados.
+Si se desea ver la funcionalidad, ir al front-end.
+
+## Estas son para el usuario.
+
+**(i) Búsqueda de productos por nombre:** La línea de código para el backend para esta funcionalidad se encuentra en --> La aplicación product, en el archivo views.py, en las líneas de 17 a 20
+
+**(ii) Oredenar productos por categorías:** La línea de código para el backend para esta funcionalidad se encuentra en --> La aplicación product, en el archivo views.py, en las líneas de 23 a 27
+
+
+
+## Estas son para el administrador.
+
+**(iii) Filtrar por Categoría y subcategoría:** La línea de código para el backend para esta funcionalidad se encuentra en --> La aplicación product, en el archivo admin.py, en la línea 20
+
+
+**(iv) Filtrar por estado del producto. (Si está activo o está inactivo.):** La línea de código para el backend para esta funcionalidad se encuentra en --> La aplicación product, en el archivo admin.py, en la línea 20

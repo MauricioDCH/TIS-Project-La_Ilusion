@@ -2,22 +2,25 @@
 {% block title %} {{title}} {% endblock %}
 
 {% block content %}
-<div class="text-center">
-    <h1>{{Bienvenida}}</h1>
-</div>
+    
+    {% load static %}
 
-<div class="container mt-4">
-    <div class="row">
-        <!-- Cuadro 1: Inicio -->
-        <div class="col-md-3 mb-4">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Inicio</h5>
-                    <p class="card-text">Explora la página principal</p>
-                    <a href="{% url 'inicio' %}" class="btn btn-link">Ir a Inicio</a>
+    <div class="text-center">
+        <h1>{{Bienvenida}}</h1>
+        <img src="{% static 'images/la_ilusion_color.png' %}" alt="Logo" class="img-fluid" style="max-height: 200px;"/>
+    </div>
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Cuadro 1: Inicio -->
+            <div class="col-md-3 mb-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Inicio</h5>
+                        <p class="card-text">Explora la página principal</p>
+                        <a href="{% url 'inicio' %}" class="btn btn-link">Ir a Inicio</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
         <!-- Cuadro 2: Productos -->
         <div class="col-md-3 mb-4">
@@ -101,6 +104,20 @@
             </div>
         </div>
         
+
+        <!-- Cuadro 6: Compras -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Ordenes</h5>
+                    <p class="card-text">Lista de órdenes</p>
+                    <a href="{% url 'mis_ordenes' %}" class="btn btn-link">Lista de órdenes</a>
+                </div>
+            </div>
+        </div>
+
+
+
 
         <!-- Cuadro 6: Compras -->
         <div class="col-md-3 mb-4">
