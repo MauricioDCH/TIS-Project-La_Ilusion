@@ -4,50 +4,49 @@
     <style>
         /* Ajustar tamaño del carrusel */
         #imagenCarrusel {
-            max-width: 400px; /* Ancho máximo */
-            margin: 0 auto;   /* Centrado */
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .carousel-item img {
-            height: 400px;     /* Altura de las imágenes */
-            object-fit: cover; /* Ajuste de la imagen */
+            height: 400px;
+            object-fit: cover;
         }
     </style>
-        <div class="container mt-4">
-            <div class="row">
-                <!-- Columna de carrusel de imágenes -->
-                <div class="col-md-6">
-                    <h2>Imágenes del Producto</h2>
-                    <div id="imagenCarrusel" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner">
-                            {% if imagenes %}
-                                {% for imagen in imagenes %}
-                                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                        <img src="{{ imagen.url.url }}" alt="{{ imagen.descripcion }}" class="d-block w-100">
-                                        <div class="carousel-caption d-none d-md-block">
-                                            <p>{{ imagen.descripcion }}</p>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% else %}
-                                <div class="carousel-item active">
-                                    <img src="https://via.placeholder.com/400" alt="No hay imágenes" class="d-block w-100">
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Imágenes del Producto</h2>
+                <div id="imagenCarrusel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        {% if imagenes %}
+                            {% for imagen in imagenes %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <img src="{{ imagen.url.url }}" alt="{{ imagen.descripcion }}" class="d-block w-100">
                                     <div class="carousel-caption d-none d-md-block">
-                                        <p>No hay imágenes disponibles para este producto.</p>
+                                        <p>{{ imagen.descripcion }}</p>
                                     </div>
                                 </div>
-                            {% endif %}
-                        </div>
-                        <a class="carousel-control-prev" href="#imagenCarrusel" role="button" data-slide="prev" style="color: black;">
-                            <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: black;"></span>
-                            <span class="sr-only">Anterior</span>
-                        </a>
-                        <a class="carousel-control-next" href="#imagenCarrusel" role="button" data-slide="next" style="color: black;">
-                            <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: black;"></span>
-                            <span class="sr-only">Siguiente</span>
-                        </a>
-                        
+                            {% endfor %}
+                        {% else %}
+                            <div class="carousel-item active">
+                                <img src="https://via.placeholder.com/400" alt="No hay imágenes" class="d-block w-100">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <p>No hay imágenes disponibles para este producto.</p>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
+<<<<<<< HEAD
+                    <a class="carousel-control-prev" href="#imagenCarrusel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Anterior</span>
+                    </a>
+                    <a class="carousel-control-next" href="#imagenCarrusel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Siguiente</span>
+                    </a>
+=======
                 </div>
     
                 <!-- Columna de detalles -->
@@ -60,11 +59,23 @@
                         {% csrf_token %}
                         <button type="submit">Agregar al carrito</button>
                     </form>
+>>>>>>> origin/main
                 </div>
             </div>
-            
-            <h3>Detalles del producto</h3>
-            <!-- Detalles adicionales del producto -->
+
+            <div class="col-md-6 d-flex flex-column justify-content-center">
+                <h1>{{ producto.nombre }}</h1>
+                {% load humanize %}
+                <h3 style="color: green;">${{ producto.precio|intcomma }}</h3>
+                <h6>{{ producto.descripcion }}</h6>
+                
+                <!-- Mostrar promedio de calificación -->
+                <h5>Calificación promedio: {{ promedio_calificacion|floatformat:1 }}/5</h5>
+            </div>
+        </div>
+
+        <h3>Detalles del producto</h3>
+        <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="list-group mb-4">
@@ -78,9 +89,68 @@
                 </div>
             </div>
         </div>
-    
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    {% endblock %}
-    
+
+        <h2>Comentarios y calificaciones:</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    {% for comentario in comentarios %}
+                        <div>
+                            <p><strong>{{ comentario.usuario.username }}</strong>Comentario:{{ comentario.texto }} -- Calificación: {{ comentario.calificacion }}</p>
+                        </div>
+                    {% empty %}
+                        <p>No hay comentarios aún.</p>
+                    {% endfor %}
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- Formulario para agregar una nueva calificación y comentario -->
+<h3>Añadir una calificación y comentario</h3>
+    <div class="container">
+        <form method="post" action="{% url 'detalle_producto' producto.id_producto %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_calificacion">Puntuación</label>
+                <select class="form-control" id="id_calificacion" name="calificacion" required>
+                    <option value="">Selecciona una calificación de 1 a 5...</option>  <!-- Opción por defecto -->
+                    <option value="5">5</option>
+                    <option value="4">4</option>
+                    <option value="3">3</option>
+                    <option value="2">2</option>
+                    <option value="1">1</option>
+                </select>
+                {% if comentario_form.calificacion.errors %}
+                    <ul class="errorlist">
+                        {% for error in comentario_form.calificacion.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_texto">Comentario</label>
+                <textarea class="form-control" id="id_texto" name="texto" rows="3" required placeholder="Escribe tu comentario aquí..."></textarea>
+                {% if comentario_form.texto.errors %}
+                    <ul class="errorlist">
+                        {% for error in comentario_form.texto.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="save btn btn-primary">Enviar</button>
+        </form>
+
+        </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
