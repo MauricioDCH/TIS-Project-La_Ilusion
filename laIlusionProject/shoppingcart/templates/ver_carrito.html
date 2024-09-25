@@ -32,21 +32,23 @@
                         ${{ total_a_pagar|intcomma }}
                     </p>
                 </div>
-
                 <!-- Contenedor para alinear los botones en una sola fila -->
                 <div class="d-flex justify-content-between mt-3">
 
-                    <form method="POST" action="{% url 'comprar' %}">
+                    <form method="POST" action="{% url 'crear_orden' %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-success">
-                            Comprar
-                        </button>
+                        Proceder a la compra
+                    </button>
                     </form>
                 </div>
-                {% endif %}
-                <a href="{% url 'product_index' %}" class="btn btn-primary" style="background-color: #bc761a; color: white;">
-                    Volver a productos
-                </a>
+            {% else %}
+                <p>No tienes productos en tu carrito.</p>
+            {% endif %}
+                                    <!-- Botón para ver el carrito -->
+                                    <a href="{% url 'product_index' %}" class="btn btn-primary me-2" style="background-color: #bc761a; color: white;"> <!-- 'me-2' para dar espacio entre botones -->
+                                        Ir a productos
+                                    </a>
         </div>
     </div>
 </div>

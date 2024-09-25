@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Detalles de la Orden #{{ orden.orderNumber }}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="display-4 text-center">Detalles de la Orden #{{ orden.orderNumber }}</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Información de la Orden</h5>
+            <p><strong>Fecha de Creación:</strong> {{ orden.orderDate|date:"D d M Y H:i" }}</p>
+            <p><strong>Estado:</strong> {{ orden.get_status_display }}</p>
+            <p><strong>Monto Total:</strong> <span class="text-success">${{ orden.totalAmount }}</span></p>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <a href="{% url 'mis_ordenes' %}" class="btn btn-success">Volver a mis órdenes</a>
+    </div>
+</div>
+{% endblock %}
