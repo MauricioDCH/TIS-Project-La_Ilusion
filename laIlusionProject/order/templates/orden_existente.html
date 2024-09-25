@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="alert alert-warning text-center">
+            <h1 class="display-4">¡Atención!</h1>
+            <p>Ya existe una orden para este carrito.</p>
+            <a href="{% url 'mis_ordenes' %}" class="btn btn-success">Volver a mis órdenes</a>
+        </div>
+    </div>
+{% endblock %}
