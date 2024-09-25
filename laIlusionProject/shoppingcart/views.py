@@ -1,15 +1,17 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from product.models import Producto
 from .models import Carrito, ItemCarrito
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView
 
-# Create your views here.
+# Vistas
 
 class AgregarAlCarritoView(LoginRequiredMixin, View):
+    login_url = 'login'  # Redirige a la página de login si no está autenticado
+    
     def post(self, request, producto_id):
-        producto = get_object_or_404(Producto, pk = producto_id)
+        producto = get_object_or_404(Producto, pk=producto_id)
         carrito, created = Carrito.objects.get_or_create(usuario=request.user)
 
         # Verifica si el producto ya está en el carrito
@@ -24,6 +26,7 @@ class AgregarAlCarritoView(LoginRequiredMixin, View):
     
 
 class VerCarritoView(LoginRequiredMixin, DetailView):
+    login_url = 'login'  # Redirige a la página de login si no está autenticado
     model = Carrito
     template_name = 'ver_carrito.html'
     context_object_name = 'carrito'
@@ -31,10 +34,21 @@ class VerCarritoView(LoginRequiredMixin, DetailView):
     def get_object(self):
         # Obtiene el carrito del usuario actual
         return Carrito.objects.get(usuario=self.request.user)
-    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        carrito = self.get_object()
+
+        # Calcula el total a pagar
+        total_a_pagar = sum(item.get_total_price() * item.cantidad for item in carrito.items.all())
+        context['total_a_pagar'] = total_a_pagar
+
+        return context
 
 
 class EliminarDelCarritoView(LoginRequiredMixin, View):
+    login_url = 'login'  # Redirige a la página de login si no está autenticado
+    
     def post(self, request, item_id):
         # Obtiene el carrito del usuario
         carrito = get_object_or_404(Carrito, usuario=request.user)
@@ -45,3 +59,17 @@ class EliminarDelCarritoView(LoginRequiredMixin, View):
 
         # Redirige de nuevo a la vista del carrito
         return redirect('ver_carrito')
+
+
+class ComprarView(LoginRequiredMixin, View):
+    login_url = 'login'  # Redirige a la página de login si no está autenticado
+    
+    def post(self, request):
+        return redirect('confirmacion_compra')
+
+
+class ConfirmacionCompraView(LoginRequiredMixin, View):
+    login_url = 'login'  # Redirige a la página de login si no está autenticado
+    
+    def get(self, request):
+        return render(request, 'confirmacion_compra.html')

@@ -2,15 +2,119 @@
 {% block title %} {{title}} {% endblock %}
 
 {% block content %}
-<div class="text">
+<div class="text-center">
     <h1>{{Bienvenida}}</h1>
 </div>
-</br>
-<div class="container">
-    <h1>{{Contenido_slogan}}</h1>
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Cuadro 1: Inicio -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Inicio</h5>
+                    <p class="card-text">Explora la página principal</p>
+                    <a href="{% url 'inicio' %}" class="btn btn-link">Ir a Inicio</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cuadro 2: Productos -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Productos</h5>
+                    <p class="card-text">Descubre nuestros productos</p>
+                    <a href="{% url 'product_index' %}" class="btn btn-link">Ver Productos</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cuadro 3: Nosotros -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Nosotros</h5>
+                    <p class="card-text">Conoce más sobre nosotros</p>
+                    <a href="{% url 'nosotros' %}" class="btn btn-link">Saber más</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cuadro 4: Contáctenos -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Contáctenos</h5>
+                    <p class="card-text">Contáctanos para más información</p>
+                    <a href="{% url 'contactenos' %}" class="btn btn-link">Contáctanos</a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        
+        <!-- Cuadro 5: Carrito de compras -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Registro</h5>
+                    <p class="card-text">Registrarse</p>
+                    <a href="{% url 'register' %}" class="btn btn-link">Registrarse</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cuadro 5: Inicio de sesión -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Inicio de sesión</h5>
+                    <p class="card-text">Iniciar sesión</p>
+                    <a href="{% url 'login' %}" class="btn btn-link">Iniciar sesión</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cuadro 5: Carrito de compras -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">¿Olvidaste la contraseña?</h5>
+                    <p class="card-text">Recupera la contraseña</p>
+                    <a href="{% url 'password_reset' %}" class="btn btn-link">Recupera la contraseña</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cuadro 5: Carrito de compras -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Carrito de compras</h5>
+                    <p class="card-text">Ver el carrito de compras</p>
+                    <a href="{% url 'ver_carrito' %}" class="btn btn-link">Ir al carrito de compras</a>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- Cuadro 6: Compras -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Compra exitosa</h5>
+                    <p class="card-text">Cómo se vería una compra exitosa</p>
+                    <a href="{% url 'confirmacion_compra' %}" class="btn btn-link">Compra exitosa</a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
 </div>
-</br>
-<div class="container">
-    <h2>Aún estamos en construcción.</h2>
-</div>
+
 {% endblock %}

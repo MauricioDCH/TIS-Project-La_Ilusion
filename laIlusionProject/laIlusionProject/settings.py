@@ -133,7 +133,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-LOGIN_REDIRECT_URL = '/profile/'  # Redirigir al perfil después del login
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'  # Redirigir al perfil después del login
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
