@@ -1,6 +1,5 @@
 from django.urls import path
 from .views import ProductIndexView, DetalleProductoView
-from . import views
 
 urlpatterns = [
     # Un ejemplo de vista básica

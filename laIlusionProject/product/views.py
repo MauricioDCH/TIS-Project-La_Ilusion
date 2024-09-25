@@ -47,7 +47,7 @@ class ProductIndexView(View):
         }
         return render(request, 'lista_productos.html', context)
 
-@method_decorator(login_required, name='post')
+@method_decorator(login_required(login_url='login'), name='post')
 class DetalleProductoView(View):
     def get(self, request, producto_id):
         # Obtén el producto por id_producto y todas sus imágenes
@@ -90,6 +90,7 @@ class DetalleProductoView(View):
         return render(request, 'detalle_producto.html', context)
 
     def post(self, request, producto_id):
+        login_url = 'login'  # Redirige a la página de login si no está autenticado
         # Obtener el producto
         producto = get_object_or_404(Producto, id_producto=producto_id)
 
