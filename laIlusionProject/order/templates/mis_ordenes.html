@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>Mis Órdenes</h1>
+
+    {% if ordenes %}
+        <ul>
+            {% for orden in ordenes %}
+                <li>
+                    <a href="{% url 'ver_orden' orden.orderNumber %}">
+                        Orden #{{ orden.orderNumber }} - {{ orden.orderDate }} - Estado: {{ orden.get_status_display }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No tienes órdenes registradas.</p>
+    {% endif %}
+
+    <p><a href="{% url 'ver_carrito' %}">Ver carrito</a></p>
+{% endblock %}
+    

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>Detalles de la Orden #{{ orden.orderNumber }}</h1>
+
+    <p><strong>Fecha de Creación:</strong> {{ orden.orderDate }}</p>
+    <p><strong>Estado:</strong> {{ orden.get_status_display }}</p>
+    <p><strong>Monto Total:</strong> ${{ orden.totalAmount }}</p>
+
+    <h2>Productos en la Orden</h2>
+    <ul>
+        {% for item in orden.shoppingCart.items.all %}
+            <li>
+                {{ item.cantidad }} x {{ item.producto.nombre }} - Precio unitario: ${{ item.producto.precio }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="{% url 'ver_carrito' %}">Volver al carrito</a></p>
+{% endblock %}
