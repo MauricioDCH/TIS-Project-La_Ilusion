@@ -8,31 +8,48 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
+from django.views import View
+from django.shortcuts import redirect, render, get_object_or_404
+from .models import Carrito, Orden, OrdenProducto, Producto
+import uuid
+
 class CrearOrdenView(View):
     def post(self, request):
         # Obtener el carrito del usuario
         carrito = get_object_or_404(Carrito, usuario=request.user)
 
+        # Verificar que el carrito no esté vacío
         if not carrito.items.exists():
             return redirect('ver_carrito')
 
         # Crear la orden
         orden = Orden.objects.create(
-            shoppingCart=carrito,
-            totalAmount=0,  
+            totalAmount=0,
             usuario=request.user,
         )
 
-        print(carrito.items.all())
-        # Calcular el total de la orden
-        total = sum(item.cantidad * item.producto.precio for item in carrito.items.all())
+        total = 0
+        for item in carrito.items.all():
+            producto = item.producto
+            cantidad = item.cantidad
+            OrdenProducto.objects.create(
+                orden=orden,
+                producto=producto,
+                cantidad=cantidad
+            )
+            total += producto.precio * cantidad
+
         orden.totalAmount = total
         orden.save()
 
-        # Vaciar el carrito después de generar la orden
+        # Vaciar el carrito
         carrito.items.all().delete()
 
+        # Crear un nuevo carrito para el usuario
+        #nuevo_carrito = Carrito.objects.create(usuario=request.user)
+
         return redirect('ver_orden', orden_id=orden.orderNumber)
+
     
 class VerOrdenView(DetailView):
     model = Orden
