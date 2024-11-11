@@ -6,11 +6,11 @@ services:
     ports:
       - "3307:3306"
     environment:
-      - MYSQL_DATABASE='proyecto-la-ilusion'
-      - MYSQL_USER='root'
-      - MYSQL_PASSWORD='password'
-      - MYSQL_HOST='35.224.90.191'
-      - MYSQL_ROOT_PASSWORD='password'
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
       - /tmp/code/mysqld:/var/run/mysqld
       - ./db:/var/lib/mysql
