@@ -14,7 +14,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-      # Crear el archivo .env en el directorio config/
+    # Crear los directorios necesarios para .env
+    - name: Create config directory if it doesn't exist
+      run: |
+        mkdir -p ./laIlusionProject/config
+
+    # Crear el archivo .env en el directorio config/
     - name: Create .env file for Docker Compose
       run: |
         echo MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} >> ./laIlusionProject/config/.env
@@ -22,15 +27,16 @@ jobs:
         echo MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} >> ./laIlusionProject/config/.env
         echo MYSQL_HOST=${{ secrets.MYSQL_HOST }} >> ./laIlusionProject/config/.env
         echo MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} >> ./laIlusionProject/config/.env
-        
+
     - name: docker login
       env:
         DOCKER_USER: ${{secrets.DOCKERHUB_USER}}
         DOCKER_PASS: ${{secrets.DOCKERHUB_PASS}}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASS
+
     - name: Build the Docker image
       run: docker build . --file laIlusionProject/Dockerfile --tag mdcorreah/express-randomquotes:latest
-      
+
     - name: Docker Push
       run: docker push mdcorreah/express-randomquotes
