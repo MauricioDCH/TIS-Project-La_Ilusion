@@ -13,6 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
+      # Crear el archivo .env en el directorio config/
+    - name: Create .env file for Docker Compose
+      run: |
+        echo MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} >> ./laIlusionProject/config/.env
+        echo MYSQL_USER=${{ secrets.MYSQL_USER }} >> ./laIlusionProject/config/.env
+        echo MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} >> ./laIlusionProject/config/.env
+        echo MYSQL_HOST=${{ secrets.MYSQL_HOST }} >> ./laIlusionProject/config/.env
+        echo MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} >> ./laIlusionProject/config/.env
+        
     - name: docker login
       env:
         DOCKER_USER: ${{secrets.DOCKERHUB_USER}}
