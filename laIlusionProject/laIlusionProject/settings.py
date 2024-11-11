@@ -10,11 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DOTENV_PATH = os.path.join(BASE_DIR, 'config', '.env')
+load_dotenv(DOTENV_PATH)
 
 # Configuración de la carpeta media.
 MEDIA_URL = '/media/'
@@ -89,6 +92,7 @@ WSGI_APPLICATION = "laIlusionProject.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
 """
 DATABASES = {
     "default": {
@@ -101,11 +105,11 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'proyecto-la-ilusion',
-        'USER': 'root',
-        'PASSWORD': 'password',
-        'HOST': '35.224.90.191',
-        'PORT': '3306'
+        'NAME': os.getenv('MYSQL_DATABASE'),
+        'USER': os.getenv('MYSQL_USER'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+        'HOST': os.getenv('MYSQL_HOST'),
+        'PORT': '3306',
     }
 }
 
