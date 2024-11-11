@@ -89,10 +89,23 @@ WSGI_APPLICATION = "laIlusionProject.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+"""
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'proyecto-la-ilusion',
+        'USER': 'root',
+        'PASSWORD': 'password',
+        'HOST': '35.224.90.191',
+        'PORT': '3306'
     }
 }
 
