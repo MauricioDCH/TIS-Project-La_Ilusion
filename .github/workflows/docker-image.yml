@@ -14,19 +14,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # Crear los directorios necesarios para .env
-    - name: Create config directory if it doesn't exist
-      run: |
-        mkdir -p ./laIlusionProject/config
-
     # Crear el archivo .env en el directorio config/
     - name: Create .env file for Docker Compose
       run: |
-        echo MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} >> ./laIlusionProject/config/.env
-        echo MYSQL_USER=${{ secrets.MYSQL_USER }} >> ./laIlusionProject/config/.env
-        echo MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} >> ./laIlusionProject/config/.env
-        echo MYSQL_HOST=${{ secrets.MYSQL_HOST }} >> ./laIlusionProject/config/.env
-        echo MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} >> ./laIlusionProject/config/.env
+        echo MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} >> ./laIlusionProject/.env
+        echo MYSQL_USER=${{ secrets.MYSQL_USER }} >> ./laIlusionProject/.env
+        echo MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} >> ./laIlusionProject/.env
+        echo MYSQL_HOST=${{ secrets.MYSQL_HOST }} >> ./laIlusionProject/.env
+        echo MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} >> ./laIlusionProject/.env
 
     - name: docker login
       env:

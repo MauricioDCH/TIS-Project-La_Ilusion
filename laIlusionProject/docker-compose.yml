@@ -1,5 +1,7 @@
 services:
   db:
+    env_file: 
+        - ./.env
     image: mysql:8.4.0
     ports:
       - "3307:3306"
@@ -13,6 +15,8 @@ services:
       - /tmp/code/mysqld:/var/run/mysqld
       - ./db:/var/lib/mysql
   web:
+    env_file: 
+      - ./.env
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     ports:

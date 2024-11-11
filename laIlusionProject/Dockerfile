@@ -4,12 +4,10 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /code
 
-COPY laIlusionProject/requirements.txt /code
+COPY . /code
 
 RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
-
-COPY . /code
 
 EXPOSE 8000
