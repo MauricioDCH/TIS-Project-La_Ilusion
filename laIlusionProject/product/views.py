@@ -7,6 +7,8 @@ from django.db.models import Avg
 from django.http import HttpResponse
 from .models import Producto
 from .forms import ComentarioForm
+from rest_framework.generics import ListAPIView
+from .serializers import ProductoSerializer
 # Create your views here.
 
 class ProductIndexView(View):
@@ -132,3 +134,8 @@ class DetalleProductoView(View):
                 'comentario_form': comentario_form,  # Incluir el formulario con errores
             }
             return render(request, 'detalle_producto.html', context)
+        
+
+class ProductoListAPIView(ListAPIView):
+    queryset = Producto.objects.all()
+    serializer_class = ProductoSerializer

@@ -9,3 +9,4 @@ sqlparse==0.4.3
 urllib3==1.26.16
 pillow==10.4.0
 python-dotenv==1.0.1
+djangorestframework

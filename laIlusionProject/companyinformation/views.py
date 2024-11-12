@@ -2,18 +2,22 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+
 class HomePageView(TemplateView):
     template_name = 'home.html'
     
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        # Obtener los datos de la API desde la caché
+        
+        # Añadir los datos de la API al contexto
         context.update({
             "title": "Inicio - La Ilusión Pisos y Enchapes",
-            "Bienvenida":"Bienvenidos a la aplicación de la empresa la Ilusión Pisos y Enchapes.",
-            "Contenido_slogan":"\"Donde los sueños de su hogar se hacen realidad\"",
+            "Bienvenida": "Bienvenidos a la aplicación de la empresa la Ilusión Pisos y Enchapes.",
+            "Contenido_slogan": "\"Donde los sueños de su hogar se hacen realidad\"",
         })
-
+        
         return context
 
 
