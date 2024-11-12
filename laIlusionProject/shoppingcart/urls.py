@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from .views import AgregarAlCarritoView, VerCarritoView, EliminarDelCarritoView, ComprarView, ConfirmacionCompraView
 
@@ -10,3 +12,4 @@ urlpatterns = [
     path('agregar/<int:producto_id>/', AgregarAlCarritoView.as_view(), name='agregar_al_carrito'),
     path('carrito/eliminar/<int:item_id>/', EliminarDelCarritoView.as_view(), name='eliminar_del_carrito'),
 ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

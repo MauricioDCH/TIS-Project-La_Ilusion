@@ -39,11 +39,32 @@ class VerCarritoView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         carrito = self.get_object()
 
+        # Obtener los productos en el carrito
+        productos_con_imagen = []
+        for item in carrito.items.all():  # Aquí usas los elementos del carrito, no todos los productos
+            producto = item.producto
+            imagenes = producto.imagenes.all()  # Usa el related_name que definiste
+            primera_imagen = imagenes.first() if imagenes.exists() else None  # Obtén la primera imagen
+            
+            # Agregar el producto y la primera imagen a la lista
+            productos_con_imagen.append({
+                'producto': producto,
+                'cantidad': item.cantidad,
+                'primera_imagen': primera_imagen,
+                'total_producto': item.get_total_price()  # Suponiendo que `get_total_price` devuelve el total de un producto
+            })
+
         # Calcula el total a pagar
         total_a_pagar = sum(item.get_total_price() * item.cantidad for item in carrito.items.all())
+        
+        # Agrega los productos con imágenes y el total a pagar al contexto
         context['total_a_pagar'] = total_a_pagar
+        context['productos_con_imagen'] = productos_con_imagen
 
         return context
+
+
+
 
 
 class EliminarDelCarritoView(LoginRequiredMixin, View):
