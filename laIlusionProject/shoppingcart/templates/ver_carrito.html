@@ -1,54 +1,69 @@
 {% extends 'base.html' %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
+{% load static %}
 <div class="container mt-5">
-    <h2 class="text-center">Tu Carrito de Compras</h2>
+    <h2 class="text-center mb-4">Tu Carrito de Compras</h2>
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <ul class="list-group">
                 {% load humanize %}
-                {% for item in carrito.items.all %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="mb-1">{{ item.producto.nombre }}</h5>
-                            <p class="mb-1">Cantidad: {{ item.cantidad }}</p>
-                            <p class="mb-1" style="color: blue;">
-                                <strong>Precio total:</strong> ${{ item.get_total_price|intcomma }}
-                            </p>
+                {% for item in productos_con_imagen %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center mb-3 p-3 shadow-sm rounded">
+                        <div class="d-flex align-items-center">
+                            <div class="producto d-flex">
+                                <!-- Imagen del producto -->
+                                {% if item.primera_imagen %}
+                                    <img src="{{ item.primera_imagen.url.url }}" alt="{{ item.producto.nombre }}" class="img-thumbnail rounded-circle" style="max-width: 100px; max-height: 100px;">
+                                {% else %}
+                                    <img src="{% static 'images/default_image.png' %}" alt="Imagen por defecto" class="img-thumbnail rounded-circle" style="max-width: 100px; max-height: 100px;">
+                                {% endif %}
+                                
+                                <div class="ms-3">
+                                    <h5 class="mb-1">{{ item.producto.nombre }}</h5>
+                                    <p class="mb-1">Cantidad: {{ item.cantidad }}</p>
+                                    <p class="mb-1 text-primary">
+                                        <strong>Precio por unidad:</strong> ${{ item.total_producto|intcomma }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <form method="POST" action="{% url 'eliminar_del_carrito' item.id %}">
+
+                        <!-- Formulario para eliminar del carrito -->
+                        <form method="POST" action="{% url 'eliminar_del_carrito' item.producto.id_producto %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                            <button type="submit" class="btn btn-danger btn-sm rounded-pill">Eliminar</button>
                         </form>
                     </li>
                 {% empty %}
-                    <li class="list-group-item">No tienes productos en tu carrito.</li>
+                    <li class="list-group-item text-center text-muted">No tienes productos en tu carrito.</li>
                 {% endfor %}
             </ul>
+            
             {% if total_a_pagar %}
-                <div class="mt-4">
+                <div class="mt-4 p-3 border rounded shadow-sm">
                     <h4>Total a Pagar:</h4>
-                    <p style="color: blue; font-weight: bold;">
+                    <p class="text-primary font-weight-bold" style="font-size: 1.5rem;">
                         ${{ total_a_pagar|intcomma }}
                     </p>
                 </div>
-                <!-- Contenedor para alinear los botones en una sola fila -->
-                <div class="d-flex justify-content-between mt-3">
-
-                    <form method="POST" action="{% url 'crear_orden' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-success">
+            {% else %}
+                <p class="text-center text-muted mt-3">No tienes productos en tu carrito.</p>
+            {% endif %}
+            
+            <!-- Contenedor para los dos botones alineados horizontalmente -->
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <a href="{% url 'product_index' %}" class="btn" style="background-color: #0833a2; color: white;">
+                    Ir a productos
+                </a>
+                
+                <form method="POST" action="{% url 'crear_orden' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">
                         Proceder a la compra
                     </button>
-                    </form>
-                </div>
-            {% else %}
-                <p>No tienes productos en tu carrito.</p>
-            {% endif %}
-                                    <!-- Botón para ver el carrito -->
-                                    <a href="{% url 'product_index' %}" class="btn btn-primary me-2" style="background-color: #bc761a; color: white;"> <!-- 'me-2' para dar espacio entre botones -->
-                                        Ir a productos
-                                    </a>
+                </form>
+            </div>
         </div>
     </div>
 </div>

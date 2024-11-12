@@ -10,7 +10,7 @@ class HomePageView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update({
             "title": "Inicio - La Ilusión Pisos y Enchapes",
-            "Bienvenida":"Bienvenidos a la aplicación de la empresa la Ilusión Pisos y Enchapes.",
+            "Bienvenida":"Bienvenidos a nuestra aplicación.",
             "Contenido_slogan":"\"Donde los sueños de su hogar se hacen realidad\"",
         })
 
@@ -69,7 +69,7 @@ class ContactPageView(TemplateView):
             "Telefono_fijo": "Teléfono fijo",
             "Contenido_telefono_fijo": "(604) 251-6450",
             "Telefono_celular": "Teléfono celular",
-            "Contenido_telefono_celular": "(314) 881-7721",
+            "Contenido_telefono_celular": "573148817721",
             "Correo_electronico": "Correo electrónico de contacto",
             "Contenido_correo_electronico": "mario.perez.moralez@hotmail.com",
             "Direccion": "Dirección",

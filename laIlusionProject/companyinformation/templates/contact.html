@@ -2,21 +2,49 @@
 {% block title %} {{title}} {% endblock %}
 {% block content %}
 
-<h1>{{Subtitle}}</h1>
-<div class="container">
-    <h2>{{Telefono_fijo}}</h2>
-    <p class="lead">{{Contenido_telefono_fijo}}</p>
+<div class="container my-5">
+    <!-- Título principal -->
+    <h1 class="display-4 text-center">{{Subtitle}}</h1>
 </div>
-<div class="container">
-    <h2>{{Telefono_celular}}</h2>
-    <p class="lead">{{Contenido_telefono_celular}}</p>
+
+<div class="container my-5">
+    <!-- Teléfono Fijo -->
+    <section class="my-4 py-4 px-5 bg-light rounded shadow-sm">
+        <h2 class="h3 text-primary"><i class="fas fa-phone"></i> {{Telefono_fijo}}</h2>
+        <p class="lead">{{Contenido_telefono_fijo}}</p>
+    </section>
+
+    <!-- Teléfono Celular (enlace a WhatsApp) -->
+    <section class="my-4 py-4 px-5 bg-white rounded shadow-sm">
+        <h2 class="h3 text-primary"><i class="fas fa-mobile-alt"></i> {{Telefono_celular}}</h2>
+        <p class="lead">
+            <!-- Enlace a WhatsApp -->
+            <a href="https://api.whatsapp.com/send?phone={{Contenido_telefono_celular}}" target="_blank" class="text-success">
+                WhatsApp <i class="fab fa-whatsapp"></i>
+            </a>
+        </p>
+    </section>
+
+    <!-- Correo Electrónico -->
+    <section class="my-4 py-4 px-5 bg-light rounded shadow-sm">
+        <h2 class="h3 text-primary"><i class="fas fa-envelope"></i> {{Correo_electronico}}</h2>
+        <a href="mailto:{{Contenido_correo_electronico}}?subject=Consulta%20sobre%20{{title}}&body=Hola,%20me%20gustaría%20más%20información%20sobre%20{{title}}." class="text-primary">
+            Envíanos un correo electrónico
+        </a>
+    </section>
+
+    <!-- Dirección -->
+    <section class="my-4 py-4 px-5 bg-white rounded shadow-sm">
+        <h2 class="h3 text-primary"><i class="fas fa-map-marker-alt"></i> {{Direccion}}</h2>
+        <p class="lead">
+            {{Contenido_direccion_1}}<br>
+            {{Contenido_direccion_2}}<br>
+            {{Contenido_direccion_3}}
+        </p>
+        <a href="https://www.google.com/maps/place/Pisos+y+Enchapes+La+Ilusi%C3%B3n/@6.2584041,-75.5708689,276m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8e4428fcce939d99:0x2fb49721de68c02!8m2!3d6.2584041!4d-75.5702252!16s%2Fg%2F11b7q7v3dh?entry=ttu&g_ep=EgoyMDI0MTEwNi4wIKXMDSoASAFQAw%3D%3D" class="text-danger" target="_blank">
+            Google Maps.
+        </a>        
+    </section>
 </div>
-<div class="container">
-    <h2>{{Correo_electronico}}</h2>
-    <p class="lead">{{Contenido_correo_electronico}}</p>
-</div>
-<div class="container">
-    <h2>{{Direccion}}</h2>
-    <p class="lead">{{Contenido_direccion_1}}</br>{{Contenido_direccion_2}}</br>{{Contenido_direccion_3}}</p>
-</div>
+
 {% endblock %}
