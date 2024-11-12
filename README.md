@@ -14,6 +14,25 @@ python manage.py runserver
 
 # Main route of the project.
 ```bash
-http://127.0.0.1:8000/
+http://0.0.0.0:8000/
 ```
 To pull request
+
+Usuario: mdcorreah@eafit.edu.co
+Contraseña: LIMauricio159!!!
+
+Ya que ha estado borrándose la bd.
+
+# Para migrar la base de datos que estaba en local.
+
+```
+python manage.py dumpdata --natural-primary --natural-foreign --indent 4 > data.json
+```
+
+```
+docker compose exec web python manage.py migrate
+```
+
+```
+docker compose exec web python manage.py loaddata data.json
+```
