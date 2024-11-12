@@ -1,28 +1,55 @@
 {% extends 'base.html' %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-<h2>Tu carrito de compras</h2>
-<ul>
-    {% for item in carrito.items.all %}
-        <li>
-            Producto: {{ item.producto.nombre }} <br>
-            Cantidad: {{ item.cantidad }} <br>
-            Precio total: {{ item.get_total_price }}
+<div class="container mt-5">
+    <h2 class="text-center">Tu Carrito de Compras</h2>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <ul class="list-group">
+                {% load humanize %}
+                {% for item in carrito.items.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">{{ item.producto.nombre }}</h5>
+                            <p class="mb-1">Cantidad: {{ item.cantidad }}</p>
+                            <p class="mb-1" style="color: blue;">
+                                <strong>Precio total:</strong> ${{ item.get_total_price|intcomma }}
+                            </p>
+                        </div>
+                        <form method="POST" action="{% url 'eliminar_del_carrito' item.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No tienes productos en tu carrito.</li>
+                {% endfor %}
+            </ul>
+            {% if total_a_pagar %}
+                <div class="mt-4">
+                    <h4>Total a Pagar:</h4>
+                    <p style="color: blue; font-weight: bold;">
+                        ${{ total_a_pagar|intcomma }}
+                    </p>
+                </div>
+                <!-- Contenedor para alinear los botones en una sola fila -->
+                <div class="d-flex justify-content-between mt-3">
 
-            <form method="POST" action="{% url 'eliminar_del_carrito' item.id %}">
-                {% csrf_token %}
-                <button type="submit">Eliminar</button>
-            </form>
-        </li>
-    <div>
-        <form method="POST" action="{% url 'crear_orden' %}">
-            {% csrf_token %}
-            <button type="submit">Proceder a la compra</button>
-        </form>
+                    <form method="POST" action="{% url 'crear_orden' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">
+                        Proceder a la compra
+                    </button>
+                    </form>
+                </div>
+            {% else %}
+                <p>No tienes productos en tu carrito.</p>
+            {% endif %}
+                                    <!-- Botón para ver el carrito -->
+                                    <a href="{% url 'product_index' %}" class="btn btn-primary me-2" style="background-color: #bc761a; color: white;"> <!-- 'me-2' para dar espacio entre botones -->
+                                        Ir a productos
+                                    </a>
+        </div>
     </div>
-    {% empty %}
-        <p>No tienes productos en tu carrito.</p>
-    {% endfor %}
-</ul>
+</div>
 {% endblock %}
-    

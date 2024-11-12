@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, Subcategoria, Producto, Imagen
+from .models import Categoria, Subcategoria, Producto, Imagen, Comentario
 
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = ('nombre',)
@@ -38,3 +38,4 @@ admin.site.register(Categoria, CategoriaAdmin)
 admin.site.register(Subcategoria, SubcategoriaAdmin)
 admin.site.register(Imagen, ImagenAdmin)
 admin.site.register(Producto, ProductoAdmin)
+admin.site.register(Comentario)

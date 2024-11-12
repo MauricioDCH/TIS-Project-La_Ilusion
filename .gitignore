@@ -1,0 +1,3 @@
+# Ignorar el archivo .env
+laIlusionProject/.env
+laIlusionProject/db

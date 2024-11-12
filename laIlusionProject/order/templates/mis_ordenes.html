@@ -1,22 +1,43 @@
 {% extends 'base.html' %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-<h1>Mis Órdenes</h1>
+<div class="container mt-5">
+    <h1 class="display-4 text-center mb-4"><strong>Mis Órdenes</strong></h1>
 
     {% if ordenes %}
-        <ul>
+        <div class="list-group mt-3">
             {% for orden in ordenes %}
-                <li>
-                    <a href="{% url 'ver_orden' orden.orderNumber %}">
-                        Orden #{{ orden.orderNumber }} - {{ orden.orderDate }} - Estado: {{ orden.get_status_display }}
-                    </a>
-                </li>
+            <div class="list-group-item d-flex justify-content-between align-items-center border border-info mb-2">
+                <div>
+                    <h3 class="mb-1">
+                        <a href="{% url 'ver_orden' orden.orderNumber %}" class="text-decoration-none">
+                            Orden #{{ orden.orderNumber }}
+                        </a>
+                    </h3>
+                    <h5 class="mb-1">
+                        <strong>Fecha:</strong> {{ orden.orderDate|date:"D d M Y H:i" }} <br>
+                        <strong>Estado:</strong> {{ orden.get_status_display }}
+                    <h5 class="mb-1" style="color: green;">
+                    {% load humanize %}
+                    <strong>Total:</strong> ${{ orden.totalAmount |intcomma}}
+                </div>
+                <div>
+                    <form method="POST" action="{% url 'borrar_orden' orden.orderNumber %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+                </div>
+            </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
-        <p>No tienes órdenes registradas.</p>
+        <div class="alert alert-info mt-3">
+            No tienes órdenes registradas.
+        </div>
     {% endif %}
 
-    <p><a href="{% url 'ver_carrito' %}">Ver carrito</a></p>
+    <div class="text-center mt-4">
+        <a href="{% url 'product_index' %}" class="btn btn-success">Volver a productos</a>
+    </div>
+</div>
 {% endblock %}
-    

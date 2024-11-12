@@ -38,7 +38,6 @@ class ProductoBase(models.Model):
     uso = models.TextField(verbose_name="Uso del producto", null=False, blank=False)
     marca = models.CharField(max_length=100, verbose_name="Marca", null=False, blank=False)
     garantia = models.IntegerField(verbose_name="Garantía (meses)", null=False, blank=False)
-    calificaciones = models.DecimalField(max_digits=1, decimal_places=0, verbose_name="Calificación", validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True)
     
     # Fecha de creación, modificación, estado activo y eliminación
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación", null=False, blank=False)
@@ -69,10 +68,6 @@ class ProductoBase(models.Model):
         if self.fecha_eliminacion and self.fecha_eliminacion > now():
             raise ValidationError("La fecha de eliminación no puede ser en el futuro.")
 
-        # Validación de la calificación: Asegurar que esté entre 1 y 5
-        if self.calificaciones is not None:  # Solo valida si calificaciones no es None
-            if not (1 <= self.calificaciones <= 5):
-                raise ValidationError("La calificación debe estar entre 1 y 5.")
         # Validación del precio: Ya se asegura con el validador, pero podrías incluir otra regla si es necesario
         if self.precio < 0:
             raise ValidationError("El precio no puede ser negativo.")
@@ -94,9 +89,9 @@ class Producto(ProductoBase):
     # Imágenes es un campo obligatorio con una relación ManyToMany
     imagenes = models.ManyToManyField(Imagen, blank=True, verbose_name="Imágenes", related_name='productos_inversos')
 
-    # Relacionado con comentarios (puede estar vacío)
-    comentarios = models.ManyToManyField('Comentario', blank=True, verbose_name="Comentarios")
-    
+    # Relación con comentarios
+    #comentarios = models.ManyToManyField('Comentario', blank=True, verbose_name="Comentarios")
+
     # Campos específicos para la categoría de productos, pueden o no estar vacíos.
     acabado = models.CharField(max_length=255, blank=True, null=True, verbose_name="Acabado")
     adherencia = models.CharField(max_length=255, blank=True, null=True, verbose_name="Adherencia")
@@ -149,13 +144,22 @@ class Producto(ProductoBase):
     tipo_tanque = models.CharField(max_length=255, blank=True, null=True, verbose_name="Tipo de tanque")
     trafico = models.DecimalField(max_digits=2, decimal_places=0, max_length=255, blank=True, null=True, verbose_name="Tráfico")
 
+    # Calificaciones individuales se gestionan dentro del modelo Comentario, no como ManyToMany.
+
+    def promedio_calificaciones(self):
+        # Calcular el promedio de las calificaciones de los comentarios asociados al producto
+        comentarios_con_calificacion = self.comentarios.filter(calificacion__isnull=False)
+        if comentarios_con_calificacion.exists():
+            total_calificaciones = sum([comentario.calificacion for comentario in comentarios_con_calificacion])
+            return total_calificaciones / comentarios_con_calificacion.count()
+        return None  # O 0 si prefieres retornar un valor numérico en lugar de None.
+
     def __str__(self):
         return self.nombre
 
-    # Validación personalizada para asegurar que haya al menos una imagen
-    #def clean(self):
-        #if self.imagenes.count() == 0:
-        #    raise ValidationError("Debe subir al menos una imagen para el producto.")
+
+    def __str__(self):
+        return self.nombre
         
     def clean(self):
         super().clean()
@@ -168,13 +172,20 @@ class Producto(ProductoBase):
         super().save(*args, **kwargs)  # Guarda el objeto primero
 
 
-# Modelo de Comentario
+# Modelo de Comentario con calificación
 class Comentario(models.Model):
     id_comentario = models.AutoField(primary_key=True, verbose_name="ID del comentario")
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='comentarios', verbose_name="Producto", null=True, blank=True)
     texto = models.TextField(verbose_name="Comentario", null=False, blank=False)
-    fecha_comentario = models.DateTimeField(auto_now_add=True, verbose_name="Fecha del comentario", null=False, blank=False)
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comentarios', verbose_name="Usuario", null=True, blank=False)
+    fecha_comentario = models.DateTimeField(auto_now_add=True, verbose_name="Fecha del comentario")
+    calificacion = models.PositiveSmallIntegerField(verbose_name="Calificación", validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comentarios', verbose_name="Usuario", null=False, blank=False)
+    approved_comment = models.BooleanField(default=False)
 
+    def approve(self):
+        self.approved_comment = True
+        self.save()
 
     def __str__(self):
-        return f"Comentario {self.id_comentario} - {self.fecha_comentario}"
+        # Utilizamos el email en lugar de username
+        return f"Comentario de {self.usuario.email} el {self.fecha_comentario.strftime('%Y-%m-%d')}, Calificación: {self.calificacion if self.calificacion else 'Sin calificación'}"

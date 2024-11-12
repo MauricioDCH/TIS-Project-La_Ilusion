@@ -10,11 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DOTENV_PATH = os.path.join(BASE_DIR, '.env')
+load_dotenv(DOTENV_PATH)
 
 # Configuración de la carpeta media.
 MEDIA_URL = '/media/'
@@ -31,7 +34,7 @@ SECRET_KEY = "django-insecure-)wwxrs#ex3+am%69=ca8#xtn&+ibmm=v1(&!@uz(s2kou!^q=h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -89,10 +92,24 @@ WSGI_APPLICATION = "laIlusionProject.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+"""
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('MYSQL_DATABASE'),
+        'USER': os.getenv('MYSQL_USER'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+        'HOST': os.getenv('MYSQL_HOST'),
+        'PORT': '3306',
     }
 }
 
@@ -133,7 +150,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-LOGIN_REDIRECT_URL = '/profile/'  # Redirigir al perfil después del login
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'  # Redirigir al perfil después del login
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

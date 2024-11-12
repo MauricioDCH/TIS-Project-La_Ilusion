@@ -3,15 +3,34 @@
 {% block content %}
     <div class="container mt-4">
         <h1 class="text">{{subtitle}}</h1>
+        
         <div class="row">
-            <div class="col-12 d-flex justify-content-between mb-3"> <!-- Usar flexbox para alinear elementos -->
-                <!-- Botón para ordenar por categoría -->
-                <form method="get" action="{% url 'product_index' %}" class="me-2"> <!-- Asegúrate de que haya margen a la derecha -->
-                    <button type="submit" name="ordenar" value="true" class="btn btn-secondary" style="background-color: #bc761a; color: white;">Ordenar por Categoría</button>
-                </form>
-    
+            <div class="col-12 d-flex justify-content-between mb-3"> 
+                <div class="row mb-3">
+                    <div class="col-12 d-flex justify-content-start"> <!-- Flexbox para alinear los botones a la izquierda -->
+        
+                        <!-- Botón para ordenar por categoría -->
+                        <form method="get" action="{% url 'product_index' %}">
+                            <button type="submit" name="ordenar" value="true" class="btn btn-secondary" style="background-color: #bc761a; color: white;">
+                                Ordenar por Categoría
+                            </button>
+                        </form>
+                        
+                        <!-- Botón para ver el carrito -->
+                        <a href="{% url 'ver_carrito' %}" class="btn btn-primary me-2"> <!-- 'me-2' para dar espacio entre botones -->
+                            Ver carrito
+                        </a>
+        
+                        <!-- Botón para ver el carrito -->
+                        <a href="{% url 'mis_ordenes' %}" class="btn btn-primary me-2"> <!-- 'me-2' para dar espacio entre botones -->
+                            Ver mis ordenes
+                        </a>
+
+                    </div>
+                </div>
+
                 <!-- Formulario de búsqueda -->
-                <form method="get" action="{% url 'product_index' %}" class="d-flex"> <!-- Alineación del formulario de búsqueda -->
+                <form method="get" action="{% url 'product_index' %}" class="d-flex">
                     <input type="text" name="busqueda" placeholder="Buscar por nombre" value="{{ busqueda }}" class="form-control me-2" style="width: auto;"/>
                     <button type="submit" class="btn btn-secondary" style="background-color: #bc761a; color: white;">Buscar</button>
                 </form>
@@ -25,7 +44,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ item.producto.nombre }}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">${{ item.producto.precio }}</h6>
-                            <p class="card-text"><strong>Categoría:</strong> {{ item.producto.categoria.nombre }}</p>  <!-- Mostrar la categoría -->
+                            <p class="card-text"><strong>Categoría:</strong> {{ item.producto.categoria.nombre }}</p>
                             {% if item.primera_imagen %}
                                 <img src="{{ item.primera_imagen.url.url }}" alt="{{ item.primera_imagen.descripcion }}" class="card-img-top" style="max-height: 200px; object-fit: cover;">
                             {% else %}

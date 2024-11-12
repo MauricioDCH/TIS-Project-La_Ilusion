@@ -8,50 +8,52 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
-from django.views import View
-from django.shortcuts import redirect, render, get_object_or_404
-from .models import Carrito, Orden, OrdenProducto, Producto
-import uuid
-
-class CrearOrdenView(View):
+class CrearOrdenView(LoginRequiredMixin, View):
+    login_url = 'login'  # Redirige a la página de login si no está autenticado
     def post(self, request):
-        # Obtener el carrito del usuario
+        # Obtener el carrito del usuario (puedes usar el carrito activo o el que desees)
         carrito = get_object_or_404(Carrito, usuario=request.user)
 
-        # Verificar que el carrito no esté vacío
-        if not carrito.items.exists():
-            return redirect('ver_carrito')
-
-        # Crear la orden
+        # Crear una nueva orden
         orden = Orden.objects.create(
-            totalAmount=0,
+            shoppingCart=carrito,
+            totalAmount=0,  # Este valor se actualizará después
             usuario=request.user,
         )
 
-        total = 0
-        for item in carrito.items.all():
-            producto = item.producto
-            cantidad = item.cantidad
-            OrdenProducto.objects.create(
-                orden=orden,
-                producto=producto,
-                cantidad=cantidad
-            )
-            total += producto.precio * cantidad
-
+        # Calcular el total de la orden
+        total = sum(item.cantidad * item.producto.precio for item in carrito.items.all())
         orden.totalAmount = total
         orden.save()
 
-        # Vaciar el carrito
+        # Vaciar el carrito después de generar la orden (opcional)
         carrito.items.all().delete()
-
-        # Crear un nuevo carrito para el usuario
-        #nuevo_carrito = Carrito.objects.create(usuario=request.user)
 
         return redirect('ver_orden', orden_id=orden.orderNumber)
 
-    
-class VerOrdenView(DetailView):
+    def get(self, request):
+        # Renderizar el formulario para crear una nueva orden
+        return render(request, 'order/crear_orden.html')
+
+class OrdenExistenteView(LoginRequiredMixin, View):
+    login_url = 'login'  # Redirige a la página de login si no está autenticado
+    def get(self, request):
+        # Aquí puedes mostrar un mensaje informando al usuario
+        return render(request, 'orden_existente.html')
+class BorrarOrdenView(LoginRequiredMixin, View):
+    login_url = 'login'  # Redirige a la página de login si no está autenticado
+    def post(self, request, orden_id):
+        # Obtener la orden a eliminar
+        orden = get_object_or_404(Orden, pk=orden_id, usuario=request.user)
+        
+        # Eliminar la orden
+        orden.delete()
+
+        # Redirigir a la lista de órdenes después de eliminar
+        return redirect('mis_ordenes')
+
+class VerOrdenView(LoginRequiredMixin,DetailView):
+    login_url = 'login'  # Redirige a la página de login si no está autenticado
     model = Orden
     template_name = 'ver_orden.html'
     context_object_name = 'orden'
@@ -59,10 +61,9 @@ class VerOrdenView(DetailView):
     def get_object(self):
         # Asegurarse de que el usuario solo pueda ver sus propias órdenes
         return get_object_or_404(Orden, pk=self.kwargs['orden_id'], usuario=self.request.user)
-    
-
 
 class ListaOrdenesView(LoginRequiredMixin, ListView):
+    login_url = 'login'  # Redirige a la página de login si no está autenticado
     model = Orden
     template_name = 'mis_ordenes.html'  # Plantilla que vamos a crear
     context_object_name = 'ordenes'  # Nombre que usaremos en el template
