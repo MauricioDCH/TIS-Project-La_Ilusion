@@ -1,17 +1,36 @@
 {% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
     <link href="{% static 'app.css' %}" rel="stylesheet" />
-    <title>{% block title %}'La Ilusión Pisos y Enchapes'{% endblock %}</title>
+    <title>{% block title %}La Ilusión Pisos y Enchapes{% endblock %}</title>
+    <style>
+        /* Asegurarse de que el cuerpo ocupa toda la altura disponible */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Esto asegura que el contenido ocupe al menos toda la altura de la pantalla */
+        }
+
+        .footer {
+            margin-top: auto; /* Esto empuja el footer hacia abajo si no hay suficiente contenido */
+        }
+    </style>
 </head>
 <body>
 
+<div class="content-wrapper">
+
 <!-- navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-secondary  fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'inicio' %}">
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="img-fluid" style="max-height: 50px;"/>
@@ -23,12 +42,9 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav ms-auto d-flex align-items-center"> <!-- Alinea los elementos verticalmente -->
-
+            <div class="navbar-nav ms-auto d-flex align-items-center">
                 <a class="nav-link active fw-bold" href="{% url 'inicio' %}">Inicio</a>
                 <a class="nav-link active fw-bold" href="{% url 'product_index' %}">Productos</a>
-                
-                <!-- Dropdown con bold -->
                 <div class="btn-group">
                     <button type="button" class="btn text-white fw-bold dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Nosotros y Contáctenos
@@ -36,10 +52,11 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item fw-bold" href="{% url 'nosotros' %}">Nosotros</a></li>
                         <li><a class="dropdown-item fw-bold" href="{% url 'contactenos' %}">Contáctenos</a></li>
+                        <li><a class="dropdown-item fw-bold" href="{% url 'producto-list' %}">Nuestra API</a></li>
+                        <li><a class="dropdown-item fw-bold" href="{% url 'api_data' %}">Consumida API</a></li>
                     </ul>
                 </div>
 
-                <!-- Bloque de autenticación -->
                 {% if user.is_authenticated %}
                     <form method="post" action="{% url 'logout' %}" class="d-inline">
                         {% csrf_token %}
@@ -53,10 +70,10 @@
 
             </div>
         </div>
-
     </div>
 </nav>
 
+<!-- Weather Information -->
 <div class="container my-4">
     </br></br>
     {% block content %}
@@ -65,21 +82,35 @@
 
 <!-- footer starts-->
 {% block footer %}
-<div class="copyright py-4 text-center text-white">
+<div class="bg-dark text-white py-4 footer">
     <div class="container">
-        <small>
-            &copy; 2024 |
-            <a class="text-reset fw-bold text-decoration-none" target="_blank" href="https://x.com/MauricioDCH">
-            Mauricio Correa
-            </a> -
-            <a class="text-reset fw-bold text-decoration-none" target="_blank" href="https://x.com/">
-            Camilo Ortegon
-            </a>
-        </small>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 text-center">
+                <small>
+                    &copy; 2024 |
+                    <a class="text-reset fw-bold text-decoration-none" target="_blank" href="https://x.com/MauricioDCH">
+                    Mauricio Correa
+                    </a> -
+                    <a class="text-reset fw-bold text-decoration-none" target="_blank" href="https://x.com/">
+                        Camilo Ortegon
+                    </a>
+                </small>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
 <!-- footer ends-->
+
+<div class="bg-light text-dark text-center py-2">
+    <small>Clima en {{ weather_data.city }}, {{ weather_data.country }}: 
+        Temperatura: {{ weather_data.temperature }} K, 
+        Descripción: {{ weather_data.description }},
+        Humedad: {{ weather_data.humidity }}%, 
+        Viento: {{ weather_data.wind_speed }} m/s,
+        Actualizado a las {{ weather_data.data_time }}.
+    </small>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>

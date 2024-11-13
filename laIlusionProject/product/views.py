@@ -9,6 +9,8 @@ from .models import Producto
 from .forms import ComentarioForm
 from .generators.pdf_generator import PDFReporteGenerator
 from .generators.excel_generator import ExcelReporteGenerator
+from rest_framework.generics import ListAPIView
+from .serializers import ProductoSerializer
 # Create your views here.
 
 class ProductIndexView(View):
@@ -161,3 +163,7 @@ class GenerarReporteView(View):
                 return response
         else:
             return HttpResponse("Formato no soportado", status=400)
+
+class ProductoListAPIView(ListAPIView):
+    queryset = Producto.objects.all()
+    serializer_class = ProductoSerializer

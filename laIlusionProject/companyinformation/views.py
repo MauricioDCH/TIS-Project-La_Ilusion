@@ -1,6 +1,8 @@
 # companyinformation/views.py
 from django.shortcuts import render
 from django.views.generic import TemplateView
+import requests
+from django.views import View
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -79,4 +81,20 @@ class ContactPageView(TemplateView):
         })
         
         return context
-    
+
+class ApiDataView(View):
+    def get(self, request):
+        # URL de la API a la que queremos hacer la solicitud
+        api_url = 'http://35.223.195.155/gamesAPI/'  # Cambia esta URL por la de la API que deseas consumir
+        
+        # Hacemos la solicitud GET a la API
+        response = requests.get(api_url)
+
+        # Verificamos si la solicitud fue exitosa
+        if response.status_code == 200:
+            data = response.json()  # Suponiendo que la respuesta sea JSON
+        else:
+            data = []  # Si la respuesta no es exitosa, asignamos una lista vacía
+
+        # Pasamos los datos al template
+        return render(request, 'data_display.html', {'data': data})
