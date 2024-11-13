@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %} {{title}} {% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+
+    <!-- Título Principal -->
+    <div class="text-center">
+        <h1 class="display-4">{{Subtitle}}</h1>
+    </div>
+
+    <!-- Sección Slogan -->
+    <section class="my-5 py-4 px-5 bg-light rounded shadow">
+        <h2 class="h3 text-primary mb-3"><i class="fas fa-bullhorn"></i> {{Slogan}}</h2>
+        <p class="lead">{{Contenido_slogan}}</p>
+    </section>
+
+    <!-- Sección Historia -->
+    <section class="my-5 py-4 px-5 bg-white rounded shadow-sm">
+        <h2 class="h3 text-primary mb-3"><i class="fas fa-history"></i> {{Historia}}</h2>
+        <p class="lead">{{Contenido_historia}}</p>
+    </section>
+
+    <!-- Sección Misión y Visión -->
+    <section class="row my-5">
+        <div class="col-md-6">
+            <div class="p-4 bg-light rounded shadow-sm">
+                <h2 class="h3 text-primary mb-3"><i class="fas fa-bullseye"></i> {{Mision}}</h2>
+                <p class="lead">{{Contenido_Mision}}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="p-4 bg-light rounded shadow-sm">
+                <h2 class="h3 text-primary mb-3"><i class="fas fa-eye"></i> {{Vision}}</h2>
+                <p class="lead">{{Contenido_Vision}}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Valores -->
+    <section class="my-5 py-4 px-5 bg-white rounded shadow-sm">
+        <h2 class="h3 text-primary mb-4"><i class="fas fa-handshake"></i> {{Valores}}</h2>
+        <p class="lead">{{Contenido_Valores}}</p>
+        
+        <!-- Valores individuales sin bucles -->
+        <div class="container my-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-info">{{Valor_1}}</h4>
+                    <p class="card-text">{{Contenido_valor_1}}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container my-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-info">{{Valor_2}}</h4>
+                    <p class="card-text">{{Contenido_valor_2}}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container my-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-info">{{Valor_3}}</h4>
+                    <p class="card-text">{{Contenido_valor_3}}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container my-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-info">{{Valor_4}}</h4>
+                    <p class="card-text">{{Contenido_valor_4}}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container my-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-info">{{Valor_5}}</h4>
+                    <p class="card-text">{{Contenido_valor_5}}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Política de Calidad -->
+    <section class="my-5 py-4 px-5 bg-light rounded shadow-sm">
+        <h2 class="h3 text-primary mb-3"><i class="fas fa-check-circle"></i> {{Politica_de_calidad}}</h2>
+        <p class="lead">{{Contenido_politica_de_calidad}}</p>
+    </section>
+
+    <!-- Sección Actividad Económica -->
+    <section class="my-5 py-4 px-5 bg-white rounded shadow-sm">
+        <h2 class="h3 text-primary mb-3"><i class="fas fa-briefcase"></i> {{Actividad_economica}}</h2>
+        <p class="lead">{{Contenido_actividad_economica}}</p>
+    </section>
+
+</div>
+
+{% endblock %}
