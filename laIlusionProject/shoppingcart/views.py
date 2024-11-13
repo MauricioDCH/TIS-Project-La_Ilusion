@@ -4,6 +4,7 @@ from .models import Carrito, ItemCarrito
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView
+from paymentmethod.views import ConfirmacionCompraView
 
 # Vistas
 
@@ -88,9 +89,3 @@ class ComprarView(LoginRequiredMixin, View):
     def post(self, request):
         return redirect('confirmacion_compra')
 
-
-class ConfirmacionCompraView(LoginRequiredMixin, View):
-    login_url = 'login'  # Redirige a la página de login si no está autenticado
-    
-    def get(self, request):
-        return render(request, 'confirmacion_compra.html')

@@ -3,7 +3,6 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="display-4 text-center">Detalles de la Orden #{{ orden.orderNumber }}</h1>
-
     <div class="card mt-4">
         <div class="card-body">
             <h5 class="card-title">Información de la Orden</h5>
@@ -14,7 +13,7 @@
     </div>
     <div class="text-center mt-4">
         <a href="{% url 'mis_ordenes' %}" class="btn" style="background-color: #0833a2; color: white;">Volver a mis órdenes</a>
-        <a href="{% url 'confirmacion_compra' %}" class="btn btn-success">Confirmar compra</a>
+        <a href="{% url 'comprar_ahora' %}" class="btn btn-success">Ir a pagar</a>
     </div>
     
 </div>
