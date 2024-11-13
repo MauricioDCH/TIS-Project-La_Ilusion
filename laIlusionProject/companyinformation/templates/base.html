@@ -11,37 +11,48 @@
 <body>
 
 <!-- navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-secondary py-4">
+<nav class="navbar navbar-expand-lg navbar-dark bg-secondary  fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'inicio' %}">
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="img-fluid" style="max-height: 50px;"/>
             | La Ilusión Pisos y Enchapes
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav ms-auto d-flex align-items-center">
-                <a class="nav-link active" href="{% url 'inicio' %}">Inicio</a>
-                <a class="nav-link active" href="{% url 'product_index' %}">Productos</a>
-                <a class="nav-link active" href="{% url 'nosotros' %}">Nosotros</a>
-                <a class="nav-link active" href="{% url 'contactenos' %}">Contáctenos</a>
+            <div class="navbar-nav ms-auto d-flex align-items-center"> <!-- Alinea los elementos verticalmente -->
+
+                <a class="nav-link active fw-bold" href="{% url 'inicio' %}">Inicio</a>
+                <a class="nav-link active fw-bold" href="{% url 'product_index' %}">Productos</a>
+                
+                <!-- Dropdown con bold -->
+                <div class="btn-group">
+                    <button type="button" class="btn text-white fw-bold dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Nosotros y Contáctenos
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item fw-bold" href="{% url 'nosotros' %}">Nosotros</a></li>
+                        <li><a class="dropdown-item fw-bold" href="{% url 'contactenos' %}">Contáctenos</a></li>
+                    </ul>
+                </div>
 
                 {% if user.is_authenticated %}
-                <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn nav-link text-white" style="padding: 0; border: none; background: none;">
-                        Cerrar Sesión
-                    </button>
-                </form>
+                    <form method="post" action="{% url 'logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn nav-link text-white fw-bold" style="padding: 0; border: none; background: none;">
+                            Cerrar Sesión
+                        </button>
+                    </form>
                 {% else %}
-                    <a class="nav-link active" href="{% url 'login' %}">Iniciar Sesión</a>
+                    <a class="nav-link active fw-bold" href="{% url 'login' %}">Iniciar Sesión</a>
                 {% endif %}
+
             </div>
         </div>
+
     </div>
 </nav>
 
@@ -57,6 +68,7 @@
 </div>
 
 <div class="container my-4">
+    </br></br>
     {% block content %}
     {% endblock %}
 </div>

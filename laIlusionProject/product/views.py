@@ -7,6 +7,8 @@ from django.db.models import Avg
 from django.http import HttpResponse
 from .models import Producto
 from .forms import ComentarioForm
+from .generators.pdf_generator import PDFReporteGenerator
+from .generators.excel_generator import ExcelReporteGenerator
 from rest_framework.generics import ListAPIView
 from .serializers import ProductoSerializer
 # Create your views here.
@@ -134,6 +136,33 @@ class DetalleProductoView(View):
                 'comentario_form': comentario_form,  # Incluir el formulario con errores
             }
             return render(request, 'detalle_producto.html', context)
+
+class GenerarReporteView(View):
+    """Clase basada en vista que genera un reporte según el formato especificado (PDF o Excel)."""
+    
+    def get(self, request, formato):
+        """Método que maneja la solicitud GET para generar el reporte."""
+        
+        # Obtener todos los productos de la base de datos
+        productos = Producto.objects.all()
+
+        if formato == 'pdf':
+            generador = PDFReporteGenerator()
+            generador.generar_reporte(productos)
+            with open("reporte_productos.pdf", "rb") as f:
+                response = HttpResponse(f.read(), content_type="application/pdf")
+                response['Content-Disposition'] = 'inline; filename="reporte_productos.pdf"'
+                return response
+            
+        elif formato == 'excel':
+            generador = ExcelReporteGenerator()
+            generador.generar_reporte(productos)
+            with open("reporte_productos.xlsx", "rb") as f:
+                response = HttpResponse(f.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                response['Content-Disposition'] = 'inline; filename="reporte_productos.xlsx"'
+                return response
+        else:
+            return HttpResponse("Formato no soportado", status=400)
         
 
 class ProductoListAPIView(ListAPIView):

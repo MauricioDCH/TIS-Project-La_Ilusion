@@ -1,5 +1,7 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
-from .views import ProductIndexView, DetalleProductoView, ProductoListAPIView
+from .views import ProductIndexView, DetalleProductoView, ProductoListAPIView, GenerarReporteView
 
 urlpatterns = [
     # Un ejemplo de vista básica
@@ -7,3 +9,4 @@ urlpatterns = [
     path('producto/<int:producto_id>/', DetalleProductoView.as_view(), name='detalle_producto'),
     path('producto/api', ProductoListAPIView.as_view(), name='producto-list'),
 ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
