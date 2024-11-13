@@ -1,5 +1,0 @@
-# Ignorar el archivo .env
-laIlusionProject/.env
-laIlusionProject/db
-laIlusionProject/data.json
-*.pyc
