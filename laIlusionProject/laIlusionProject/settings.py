@@ -24,6 +24,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # Puedes usar otros como Redis o Memcached
+        'LOCATION': 'unique-snowflake',
+    }
+}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -56,6 +62,7 @@ INSTALLED_APPS = [
     "shoppingcart",
     # Third-party apps
     'django.contrib.humanize',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +88,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'companyinformation.context_processors.weather_data',
             ],
         },
     },
